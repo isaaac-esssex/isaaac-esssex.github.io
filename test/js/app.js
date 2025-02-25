@@ -25,48 +25,23 @@ document.querySelector('#btnSwapLogin').addEventListener('click', function(){
 
 // click event for btnLogin
 document.querySelector('#btnLogin').addEventListener('click', function(){
-    async function createSession(strUserEmail,strUserPassword){
+    async function getWeatherData() {
+        const url = 'https://api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.0060&current_weather=true';
+      
         try {
-            const objResponse = await fetch(strBaseURL + 'sessions.php',{
-                method:'POST',
-                headers: {
-                    'Content-Type':'application/json'
-                },
-                body: JSON.stringify({Email:strUserEmail,Password:strUserPassword})
-            })
-
-            if(!objResponse.ok){
-                throw new Error(`HTTP Error Status:${objResponse.status}`)
-            }
-
-            const objData = await objResponse.json()
-            if(objData.SessionID){
-                //Sweetalert for success
-                Swal.fire({
-                    position: "top-end",
-                    icon:"success",
-                    title:"Login Successful",
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                //Save the SessionID to sessionStorage
-                sessionStorage.setItem('SessionID',objData.SessionID)
-
-                //Clear our form
-                document.querySelector('#txtLoginUsername').value = ''
-                document.querySelector('#txtLoginPassword').value = ''
-                // Swap Login
-                document.querySelector('#frmLogin').style.display = 'none'
-                document.querySelector('#divDashboard').style.display = 'block'
-            } else {
-                //Sweetalert for failure
-            }
-        } catch(objError){
-            console.log('Error fetching objData',objError)
-            //Create a Sweetalert for user indicating failure
+          const response = await fetch(url);
+      
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+      
+          const data = await response.json();
+          window.alert(""+data.latitude)
+        } catch (error) {
+          console.error('Error fetching weather data:', error);
         }
-    }
-
+      }
+          
     // Retrieve the values from your login form
     const strEmail = document.querySelector('#txtLoginUsername').value.trim().toLowerCase()
     const strPassword = document.querySelector('#txtLoginPassword').value
@@ -89,7 +64,7 @@ document.querySelector('#btnLogin').addEventListener('click', function(){
         })
     } else {
     // Call our function to create the account
-       createSession(strEmail,strPassword) 
+    getWeatherData();
     }
 
     // Evaluate the response to ensure it worked
